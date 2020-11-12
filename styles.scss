@@ -1,0 +1,158 @@
+
+@function px-to-rem($size) {
+  $value: $size / 16px;
+  @return #{$value}rem
+}
+
+$main-color: #172950;
+$second-color: rgb(179, 235, 223);
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+@mixin button-reset($padding, $radius) {
+  outline: none;
+  border: none;
+  padding: $padding;
+  border-radius: $radius;
+}
+
+@mixin theme-invert {
+  color: $main-color;
+  background-color: white;
+}
+
+button {
+  @include button-reset(12px 144px, 500px );
+  @include theme-invert();
+
+  font-family: 'Stalemate', cursive;
+  font-size: 4rem;
+
+  display: block;
+  transition: .5s;
+  margin: 20px auto;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+}
+
+
+
+body {
+  margin: 10px;
+  padding: 5px;
+  height: 50%;
+  background-color: $second-color;
+}
+
+//Extends
+
+.example {
+  margin: 10px;
+  color: red;
+  padding: 2px 20px;
+}
+//it will has the same styles
+div {
+  @extend .example
+}
+
+h1 {
+  text-align: center;
+  color: $main-color;
+  font: {
+    weight: 200;
+    size: px-to-rem(142px);
+    family: 'Stalemate', cursive;
+  }
+  @media (max-width: 600px){
+    color: rgb(0, 0, 0);
+  }
+}
+
+@mixin fixed-bg($photo, $position: center) { //default value
+  background-image: url($photo);
+  background-position: $position;
+  background-attachment: fixed;
+}
+
+@mixin font($size, $type) {
+  font-size: $size;
+  font-weight: $type;
+}
+
+@mixin auto-center ($width) {
+  width: $width;
+  display: block;
+  margin: 0 auto;
+}
+
+
+//conditionals
+
+.red {
+  width: 100px;
+  height: 100px;
+  background-color: yellowgreen;
+  position: absolute;
+}
+
+@mixin nudge ($dir, $amount){
+  @if $dir == "top" {
+    bottom: $amount;
+  } @else if $dir == "bottom"{
+    top: $amount;
+  } @else if $dir == "left"{
+    right: $amount;
+  } @else if $dir == "right"{
+    left: $amount;
+  } @else {
+    @warn "Incorrect argument passed into nudge.";
+  }
+}   
+
+.red {
+  @include nudge('right', 10px );
+  @include nudge('top', 480px );
+}
+
+//loops
+///supose i have h1 to h6 into my html 
+
+$header-sizes: (8rem, 6rem, 5rem, 4rem, 3rem, 2.2rem);
+
+@for $i from 1 through length($header-sizes) {
+  h#{$i} {
+    font-size: nth($header-sizes, $i);
+  }
+}
+
+//another way for loops
+
+$header-sizes: (
+  h1: 8rem,
+  h2: 6rem,
+  h3: 5rem,
+  h4: 4rem,
+  h5: 3rem,
+  h6: 2.2rem
+);
+
+@each $element, $size in $header-sizes {
+  #{$element} {
+    font-size: $size;
+  }
+}
+
+//partials
+
+//_base/base.scss
+//_main/main.scss
+
+//@import "base/base.scss"
+//@import "main/main.scss"
